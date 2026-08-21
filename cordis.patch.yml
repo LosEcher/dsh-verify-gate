@@ -1,0 +1,14 @@
+# dsh-verify-gate bundle patch: host row (registers agent tool verify_run).
+#
+# Install:  dsh plugin --profile web add <this-dir-or-github>
+# Requires dsh web restart (host code).
+#
+# 二进制解析顺序：config.binary → $VERIFY_GATE_BIN → PATH verify-gate →
+# ~/.cargo/bin/verify-gate。二进制缺失时工具返回安装提示，不拖垮插件树。
+- insert:
+    - id: verify-gate
+      name: dsh-verify-gate
+      inject: [tools]
+      config:
+        binary: ''
+        timeoutMs: 180000

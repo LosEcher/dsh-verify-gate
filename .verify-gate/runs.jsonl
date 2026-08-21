@@ -1,0 +1,12 @@
+{"t":"run.start","run_id":"run-1787329019885-0","version":"0.1.0","ts":1787329019885,"cwd":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-SKtWcc","manifest":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-SKtWcc/manifest.toml","check_count":1}
+{"t":"check.start","run_id":"run-1787329019885-0","index":0,"name":"c1","type":"cmd"}
+{"t":"check.finish","run_id":"run-1787329019885-0","index":0,"name":"c1","result":"fail","duration_ms":59,"evidence_hash":"3c04ea05b7cb8716aa7b786a5b8b8549d05c1cf8c848ad56d26f5800dbb32c3a"}
+{"t":"run.finish","run_id":"run-1787329019885-0","verdict":"fail","failed":1,"na":0,"duration_ms":60}
+{"t":"run.start","run_id":"run-1787329019950-0","version":"0.1.0","ts":1787329019950,"cwd":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-WZ77UH","manifest":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-WZ77UH/manifest.toml","check_count":1}
+{"t":"check.start","run_id":"run-1787329019950-0","index":0,"name":"c","type":"file"}
+{"t":"check.finish","run_id":"run-1787329019950-0","index":0,"name":"c","result":"fail","duration_ms":0,"evidence_hash":"76d63242858759cb65c5f8323da68b40ca2f92e27d30e035983cf32ef025b4aa"}
+{"t":"run.finish","run_id":"run-1787329019950-0","verdict":"fail","failed":1,"na":0,"duration_ms":0}
+{"t":"run.start","run_id":"run-1787329043270-0","version":"0.1.0","ts":1787329043270,"cwd":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-O1LJu0","manifest":"/var/folders/p1/nvkt412d6vxgjw8__h7r34xw0000gn/T/verify-gate-O1LJu0/manifest.toml","check_count":1}
+{"t":"check.start","run_id":"run-1787329043270-0","index":0,"name":"c1","type":"cmd"}
+{"t":"check.finish","run_id":"run-1787329043270-0","index":0,"name":"c1","result":"fail","duration_ms":28,"evidence_hash":"3c04ea05b7cb8716aa7b786a5b8b8549d05c1cf8c848ad56d26f5800dbb32c3a"}
+{"t":"run.finish","run_id":"run-1787329043270-0","verdict":"fail","failed":1,"na":0,"duration_ms":29}
