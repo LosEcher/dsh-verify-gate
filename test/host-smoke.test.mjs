@@ -180,3 +180,56 @@ test('host 冒烟：二进制缺失 ⇒ 带补救指引的 toolError（不抛、
     rmSync(emptyHome, { recursive: true, force: true })
   }
 })
+
+// 三态渲染用的假二进制（2026-10-08）：返回 mixed pass+na 与全 na 两种报告。
+// 存在理由：verify-gate 的 per-check result 是三态（pass|fail|na），而 `na`
+// 既不算通过也不算失败。此前渲染把非 pass/fail 一律画成 `·`，与"未知态"混淆。
+const FAKE_BIN_TRISTATE = `#!/bin/bash
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+case "$TRISTATE_MODE" in
+  all-na)
+    printf '%s' '{"version":"0.0.0-fake","verdict":"inconclusive","exitCode":2,"passed":0,"checks":[
+      {"type":"cmd","name":"only-disabled","result":"na","durationMs":0,"detail":"disabled"}]}'
+    exit 2 ;;
+  *)
+    printf '%s' '{"version":"0.0.0-fake","verdict":"pass","exitCode":0,"passed":1,"checks":[
+      {"type":"file","name":"real-pass","result":"pass","durationMs":1},
+      {"type":"cmd","name":"scope-miss","result":"na","durationMs":0,"detail":"scope mismatch"}]}'
+    exit 0 ;;
+esac
+`
+
+test('host 冒烟：na 三态如实渲染，不冒充通过（假二进制，hermetic）', { skip: SKIP }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dsh-vg-tri-'))
+  const fake = join(dir, 'verify-gate')
+  writeFileSync(fake, FAKE_BIN_TRISTATE, 'utf8')
+  chmodSync(fake, 0o755)
+
+  const ctx = makeCtx()
+  try {
+    // ① mixed pass + na ⇒ 计数行如实、na 用独立标记 –
+    await withEnv({ PATH: dir, VERIFY_GATE_BIN: undefined, TRISTATE_MODE: 'mixed' }, async () => {
+      const mod = await loadPlugin()
+      mod.apply(ctx, {})
+      const res = await ctx.registered[0].execute({ manifestText: 'x' }, execArg())
+      const text = res.lines.join('\n')
+      assert.match(text, /计数: pass=1 fail=0 na=1/, '必须给出三态计数')
+      assert.match(text, /– \[cmd\] scope-miss: na/, 'na 用独立标记 –，不与未知态 · 混淆')
+      assert.doesNotMatch(text, /不构成通过/, '有真 pass 时不得报警示')
+    })
+
+    // ② 全 na ⇒ 显式警示，且绝不出现"通过"字样误导
+    await withEnv({ PATH: dir, VERIFY_GATE_BIN: undefined, TRISTATE_MODE: 'all-na' }, async () => {
+      const mod = await loadPlugin()
+      mod.apply(ctx, {})
+      const res = await ctx.registered[0].execute({ manifestText: 'x' }, execArg())
+      const text = res.lines.join('\n')
+      assert.equal(res.verdict, 'inconclusive')
+      assert.equal(res.exitCode, 2)
+      assert.match(text, /计数: pass=0 fail=0 na=1/)
+      assert.match(text, /不构成通过/, '全 na 必须显式警示"不构成通过"')
+    })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
