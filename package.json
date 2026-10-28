@@ -1,5 +1,6 @@
 {
   "name": "dsh-verify-gate",
+  "packageManager": "pnpm@12.4.1",
   "version": "0.1.0",
   "description": "DSH 验证门禁工具：verify_run 调用 verify-gate 二进制（github.com/LosEcher/verify-gate），按声明式 TOML 清单（file/cmd/http/git/json 断言）机械执行验证并返回结构化报告——把「验证」从散文变成 exit 0/1/2 门禁。",
   "type": "module",
